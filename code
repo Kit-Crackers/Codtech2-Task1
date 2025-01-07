@@ -1,0 +1,45 @@
+# Step 1: Import PySpark and Matplotlib
+from pyspark.sql import SparkSession
+import matplotlib.pyplot as plt
+
+# Step 2: Start a Spark session
+spark = SparkSession.builder \
+    .appName("Flight Delay Analysis") \
+    .getOrCreate()
+
+# Step 3: Load the dataset
+file_path = "air.csv"  # Replace with the actual path to your CSV file
+flight_data = spark.read.csv(file_path, header=True, inferSchema=True)
+
+# Step 4: Preview the dataset
+print("Preview of the dataset:")
+flight_data.show(5)
+
+# Step 5: Calculate total flights and total delayed flights
+total_flights = flight_data.groupBy("carrier_name").sum("arr_flights").withColumnRenamed("sum(arr_flights)", "Total Flights")
+total_delays = flight_data.groupBy("carrier_name").sum("arr_del15").withColumnRenamed("sum(arr_del15)", "Delayed Flights")
+
+# Combine both into a single DataFrame for easier analysis
+combined_data = total_flights.join(total_delays, on="carrier_name")
+
+# Step 6: Calculate delay percentage
+from pyspark.sql.functions import col, expr
+combined_data = combined_data.withColumn(
+    "Delay Percentage", (col("Delayed Flights") / col("Total Flights")) * 100
+)
+
+# Convert to Pandas for visualization
+combined_data_pd = combined_data.toPandas()
+
+# Step 7: Plot the results
+plt.figure(figsize=(10, 6))
+plt.bar(combined_data_pd["carrier_name"], combined_data_pd["Delay Percentage"], color="skyblue")
+plt.xlabel("Carrier Name")
+plt.ylabel("Delay Percentage (%)")
+plt.title("Flight Delay Percentage by Carrier")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+# Step 8: Stop the Spark session
+spark.stop()
