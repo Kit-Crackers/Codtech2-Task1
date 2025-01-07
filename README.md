@@ -1,4 +1,19 @@
+Name: Richa Singh
+
+Company: Codetech IT Solutions
+
+ID: CT08EMC
+
+Domain: Data Analysis
+
+Duration: 17Dec2024-17Jan2024
+
 # Flight Delay Analysis with PySpark
+
+# Overview of project
+![Screenshot 2025-01-07 204450](https://github.com/user-attachments/assets/92f46963-c7ee-4c35-9088-ca07ab6e77a3)
+![Screenshot 2025-01-07 204507](https://github.com/user-attachments/assets/243f0faf-07a8-4e5d-8b93-f1f008b77af7)
+
 
 ## Objectives
 - Analyze flight delay data to identify patterns.
